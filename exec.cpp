@@ -1,9 +1,9 @@
 #include <iostream>
-#include <vector>
 #include <errno.h>
 #include <unistd.h>
 #include <sstream>
 #include <cstring>
+#include <sys/wait.h>
 
 #include "exec.h"
 
@@ -13,7 +13,6 @@ using namespace std;
 int execvString( const string &path, const vector<string> &args){
 
     char* c_arr[args.size()+1];
-
     for( unsigned int i=0; i<args.size(); i++){
         char* str = new char[(args[i]).size()+1];
         strcpy(str, (args[i]).c_str());
@@ -27,23 +26,38 @@ int execvString( const string &path, const vector<string> &args){
 }
 
 
+
+
+
 void exec( string filename, const vector<string> &args){
     
     
-    cout<<"Exec "<<filename<<endl;
+    pid_t parentId = getpid();
 
-    int result = execvString(filename, args);
+    pid_t childId = fork();
 
-    cout<<"Execv Res: "<<result<<endl;
+    if(childId == 0){
+        execvString(filename, args);
 
-    string errormsg(strerror(errno));
+        if( errno ){
+            stringstream ss;
+            ss << "/bin/" << filename;
+            string binName = ss.str();
+            if(execvString(binName, args)) true;
+        }
 
-    cout<<"Error running program: "<<errormsg<<endl;
-
-    
-
-    cout<<"Finished"<<endl;
-
+        /* Since execv will "ignore" remaining code if it's succesful,
+            we can safely assume that an error has occured if we reach
+            this point  */
+        string errormsg(strerror(errno));
+        cout<<"Error running program: "<<errormsg<<endl;
+        
+    }else if(childId > 0){
+        int status;
+        wait(&status);
+    }else{
+        cout<<"Error occured in forking process"<<endl;
+    }
     
 }
 
