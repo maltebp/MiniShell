@@ -1,11 +1,13 @@
 
 #include <iostream>
 #include <vector>
+#include "exec.h"
 #include <unistd.h>
 #include <sstream>
+#include <cstring>
+
 
 using namespace std;
-
 
 
 int execvString( const string &path, const vector<string> &args){
