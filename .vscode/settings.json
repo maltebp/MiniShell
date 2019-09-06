@@ -4,6 +4,9 @@
         "xstring": "cpp",
         "xutility": "cpp",
         "istream": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "xlocale": "cpp",
+        "vector": "cpp",
+        "system_error": "cpp"
     }
 }
