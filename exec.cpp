@@ -10,10 +10,9 @@
 using namespace std;
 
 
-int execvString( const string &path, const vector<string> &args){
-
+int execvString( const vector<string> &args ){
     char* c_arr[args.size()+1];
-    
+
     for( unsigned int i=0; i<args.size(); i++){
         char* str = new char[(args[i]).size()+1];
         strcpy(str, (args[i]).c_str());
@@ -22,8 +21,7 @@ int execvString( const string &path, const vector<string> &args){
 
     // Adding the null pointer to end of argument list to conform to execv
     c_arr[args.size()] = NULL;
-
-    return execv(path.c_str(), c_arr);
+    return execv(c_arr[0], c_arr);
 }
 
 
@@ -37,14 +35,14 @@ void exec( const vector<string> &args){
     pid_t childId = fork();
 
     if(childId == 0){
-        execvString(filename, args);
+        execvString(args);
 
         //TODO FIX THIS!
         if( errno ){
             stringstream ss;
             ss << "/bin/" << filename;
             string binName = ss.str();
-            execvString(binName, args);
+            execvString(args);
         }
 
         /* Since execv will "ignore" remaining code if it's succesful,
