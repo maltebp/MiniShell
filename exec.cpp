@@ -13,6 +13,7 @@ using namespace std;
 int execvString( const string &path, const vector<string> &args){
 
     char* c_arr[args.size()+1];
+    
     for( unsigned int i=0; i<args.size(); i++){
         char* str = new char[(args[i]).size()+1];
         strcpy(str, (args[i]).c_str());
@@ -38,11 +39,12 @@ void exec( const vector<string> &args){
     if(childId == 0){
         execvString(filename, args);
 
+        //TODO FIX THIS!
         if( errno ){
             stringstream ss;
             ss << "/bin/" << filename;
             string binName = ss.str();
-            if(execvString(binName, args)) true;
+            execvString(binName, args);
         }
 
         /* Since execv will "ignore" remaining code if it's succesful,
