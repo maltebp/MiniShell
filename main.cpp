@@ -4,6 +4,7 @@
 #include <string.h>
 #include <vector>
 #include <limits>
+
 #include "exec.h"
 
 using namespace std;
@@ -28,14 +29,14 @@ const vector<string>& getArguments(string input){
 }
 
 
-// TEST METHOD
-// void printArgs(string input, const vector<string> &args){
-//     cout<<"Arguments: ";
-//     for( vector<string>::iterator it=args.begin(); it!=args.end(); it++){
-//         cout<<*it<<" ";
-//     }
-//     cout<<endl;
-// }
+void printArgs(const vector<string> &args){
+    cout<<"Arguments: ";
+    for( vector<string>::const_iterator it=args.begin(); it!=args.end(); it++){
+        cout<<*it<<" ";
+    }
+    cout<<endl;
+}
+
 
 string readInput(){
     string input;
@@ -50,7 +51,7 @@ int main(){
     while(1){ 
         string input = readInput();
         const vector<string> args = getArguments(input);
-        if(args.size()) exec(args);
+        if(args.size()) execute(args);
     }
     return 0;
 }

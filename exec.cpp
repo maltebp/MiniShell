@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 
 #include "exec.h"
+#include "piping.h"
 
 using namespace std;
 
@@ -63,9 +64,32 @@ void exec( const vector<string> &args){
 
 
 
-void execute(const vector<string> args){
-    
+void execute(const vector<string> &args){
+
+    if( isPipeCommand(args) ){
+        cout<<"Is pipe command"<<endl;
+        const vector<string> *commands = splitPipeCommand(args);
+
+         cout<<"Command 1: ";
+        for( vector<string>::const_iterator it = commands[0].begin(); it != commands[0].end(); it++){        
+            cout<<*it<<" ";
+        }
+        cout<<endl;
+
+        cout<<"Command 2: ";
+        for( vector<string>::const_iterator it = commands[1].begin(); it != commands[1].end(); it++){        
+            cout<<*it<<" ";
+        }
+        cout<<endl;
+        
+    }else{
+        cout<<"Is not pipe command"<<endl;
+    }
+    // Else: It's not a pipe command
 
 
+    //cout<< (*commands)[0] <<endl;
+
+   
 }
 
