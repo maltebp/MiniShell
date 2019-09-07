@@ -11,85 +11,107 @@
 using namespace std;
 
 
-int execvString( const vector<string> &args ){
+// Creates fork for running a single command
+void forkCommandSingle(const vector<string> &args){
+    int pid = fork();
+    if(pid == -1) cout<<"Forking error"<<endl;
+    if(pid == 0){
+        executeCommand(args);
+    }
+    if(pid > 0){
+        int status;
+        waitpid(pid, &status, 0);
+    }  
+}
+
+
+// Creates 2 forks for running a command through a pipe into another command
+void forkCommandPipe(const vector<string> &args){
+    const vector<string> *commands = splitPipeCommand(args);
+
+    int pipefd[2];
+    if( pipe(pipefd)) cout<<"Piping error!"<<endl;
+
+    // First command/fork
+    int pid1 = fork();
+
+    if( pid1 == -1 ) cout<<"Forking error!"<<endl;
+    if( pid1 == 0 ){
+        // Sets pipeinput to stdin (read)
+        dup2(pipefd[0], 0);
+        close(pipefd[1]);
+        close(pipefd[0]);
+        executeCommand(commands[1]);
+    }
+
+    // Second command/fork
+    if(pid1 > 0 ){
+        int pid2 = fork();
+
+        if( pid2 == -1 ) cout<<"Forking error!"<<endl;
+        if( pid2 == 0 ){
+            // Sets pipeoutput to stdout (wrte)
+            dup2(pipefd[1], 1);
+            close(pipefd[0]);
+            close(pipefd[1]);
+            executeCommand(commands[0]);
+        }
+        if( pid2 > 0 ){
+            close(pipefd[1]);
+            close(pipefd[0]);
+
+            int status;
+            waitpid(pid1, &status, 0);
+            waitpid(pid2, &status, 0);
+        } 
+    }
+
+    delete commands;
+}
+
+
+/* Wrapper function for execv function, with C++ friendly arguments
+    (string vector + path) */
+int execvString( const string path, const vector<string> &args ){
     char* c_arr[args.size()+1];
 
     for( unsigned int i=0; i<args.size(); i++){
-        char* str = new char[(args[i]).size()+1];
-        strcpy(str, (args[i]).c_str());
+        char* str = new char[args[i].size()+1];
+        strcpy(str, args[i].c_str());
         c_arr[i] = str;
     }
 
     // Adding the null pointer to end of argument list to conform to execv
     c_arr[args.size()] = NULL;
-    return execv(c_arr[0], c_arr);
+    return execv(path.c_str(), c_arr);
 }
 
 
+/* Executes a given command, and automatically check if the command
+    exists in the /bin/ directory, if it cant find it in the given path*/
+void executeCommand( const vector<string> &args){
 
-void exec( const vector<string> &args){
-    
-    string filename = args[0];
-    
-    pid_t parentId = getpid();
+    execvString( args[0], args);
 
-    pid_t childId = fork();
+    // 2 = No such directory, then we check bin folder
+    if( errno == 2 ){
 
-    if(childId == 0){
-        execvString(args);
+        // Create path for same file, but in bin
+        stringstream ss;
+        ss << "/bin/" << args[0];
+        string binName = ss.str();
 
-        //TODO FIX THIS!
-        if( errno ){
-            stringstream ss;
-            ss << "/bin/" << filename;
-            string binName = ss.str();
-            execvString(args);
-        }
-
-        /* Since execv will "ignore" remaining code if it's succesful,
-            we can safely assume that an error has occured if we reach
-            this point  */
-        string errormsg(strerror(errno));
-        cout<<"Error running program: "<<errormsg<<endl;
-        
-    }else if(childId > 0){
-        int status;
-        wait(&status);
-    }else{
-        cout<<"Error occured in forking process"<<endl;
+        execvString(binName, args);
     }
-    
+
+    /* Since execv will "ignore" remaining code if it's succesful,
+        we can safely assume that an error has occured if we reach
+        this point  */
+    string errormsg(strerror(errno));
+    cout<<"Error running program: "<<errormsg<<endl;
 }
 
 
 
 
-void execute(const vector<string> &args){
-
-    if( isPipeCommand(args) ){
-        cout<<"Is pipe command"<<endl;
-        const vector<string> *commands = splitPipeCommand(args);
-
-         cout<<"Command 1: ";
-        for( vector<string>::const_iterator it = commands[0].begin(); it != commands[0].end(); it++){        
-            cout<<*it<<" ";
-        }
-        cout<<endl;
-
-        cout<<"Command 2: ";
-        for( vector<string>::const_iterator it = commands[1].begin(); it != commands[1].end(); it++){        
-            cout<<*it<<" ";
-        }
-        cout<<endl;
-        
-    }else{
-        cout<<"Is not pipe command"<<endl;
-    }
-    // Else: It's not a pipe command
-
-
-    //cout<< (*commands)[0] <<endl;
-
-   
-}
 

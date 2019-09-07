@@ -5,6 +5,8 @@
 
 using namespace std;
 
+
+void forkCommandSingle(const vector<string> &args);
+void forkCommandPipe(const vector<string> &args);
+void executeCommand(const vector<string> &args);
 int execvString(const vector<string> &args);
-void exec( const vector<string> &args);
-void execute(const vector<string> &args);

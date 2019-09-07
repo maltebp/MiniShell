@@ -2,6 +2,7 @@
 #include "piping.h"
 
 
+// Checks to see if there is a pipe symbol in argument list 
 int isPipeCommand( const vector<string> &args ){
     for(int i=0; i<args.size(); i++){
         if( args[i] == "|" && i>0 && i<args.size()-1 ) return 1;
@@ -10,6 +11,7 @@ int isPipeCommand( const vector<string> &args ){
 }
 
 
+// Returns the argument index of the pipe symbol 
 int getPipeIndex(const vector<string> &args){
     for(int i=0; i<args.size(); i++){
         if( args[i] == "|" ) return i;
@@ -18,46 +20,27 @@ int getPipeIndex(const vector<string> &args){
 }
 
 
+/* Split a pipe command ('cmd1 arg1 | cmd2 arg1') into to seperate 
+    lists (vectors) of string commands and arguments */
 const vector<string>* splitPipeCommand(const vector<string> &args){
 
     if(!isPipeCommand) return NULL;
     
     int pipeIndex = getPipeIndex(args);
 
+    // Create array of size 2, with to string vectors
     vector<string> *cmds;
     cmds = new vector<string>[2];   
 
+    // Create first string vector
     for( int i=0; i<pipeIndex; i++){
         cmds[0].push_back(args[i]);
     }
 
+    // Create seconds string vector
     for( int i=pipeIndex+1; i<args.size(); i++){
         cmds[1].push_back(args[i]);
     }
 
     return cmds;
 }
-
-
-// void testPipeCmd(){
-
-//     vector<string> args;
-//     args.push_back("cmd1");
-//     args.push_back("arg1")
-//     args.push_back("arg2")
-//     args.push_back("|")
-//     args.push_back("cmd2")
-//     args.push_back("arg1")
-//     args.push_back("arg2")
-
-
-//     cout<<"Is "<<(isPipeCommand(args) ? "" : "not ")<<"pipe command"<<endl;
-
-//     command cmds[2] = splitPipeCmd(args);
-
-//     vector<string> *args = &(cmds[0].args);
-
-//     for( int=0; i<args.size(); i++)
-
-//     cout<<"Command 1:"
-// }

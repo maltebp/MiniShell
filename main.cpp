@@ -6,10 +6,12 @@
 #include <limits>
 
 #include "exec.h"
+#include "piping.h"
 
 using namespace std;
 
 #define PROMPT "MiniShell$ "
+
 
 // Sort arguments and put them into vector (list)
 const vector<string>& getArguments(string input){
@@ -29,15 +31,7 @@ const vector<string>& getArguments(string input){
 }
 
 
-void printArgs(const vector<string> &args){
-    cout<<"Arguments: ";
-    for( vector<string>::const_iterator it=args.begin(); it!=args.end(); it++){
-        cout<<*it<<" ";
-    }
-    cout<<endl;
-}
-
-
+// Reads user input from terminal (executable commands ls, cat, nano etc);
 string readInput(){
     string input;
     do{
@@ -47,11 +41,18 @@ string readInput(){
     return input;
 }
 
+
 int main(){
     while(1){ 
         string input = readInput();
         const vector<string> args = getArguments(input);
-        if(args.size()) execute(args);
+        if(args.size() > 0){
+            if( isPipeCommand(args) )
+                forkCommandPipe(args);
+                
+            else
+                forkCommandSingle(args);
+        }
     }
     return 0;
 }
