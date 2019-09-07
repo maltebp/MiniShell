@@ -27,10 +27,9 @@ int execvString( const string &path, const vector<string> &args){
 
 
 
-
-
-void exec( string filename, const vector<string> &args){
+void exec( const vector<string> &args){
     
+    string filename = args[0];
     
     pid_t parentId = getpid();
 
@@ -61,4 +60,12 @@ void exec( string filename, const vector<string> &args){
     
 }
 
+
+
+
+void execute(const vector<string> args){
+    
+
+
+}
 

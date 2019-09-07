@@ -10,11 +10,31 @@ using namespace std;
 
 #define PROMPT "MiniShell$ "
 
+// Sort arguments and put them into vector (list)
+const vector<string>& getArguments(string input){
+    vector<string> args;
+    string arg = "";
+    for( string::iterator it = input.begin(); it != input.end(); it++){
+        if( *it == ' '){
+            if( !arg.empty() ) args.push_back(arg);
+            arg.clear();
+        }else{
+            arg += *it;
+        }
+    }
+    if( !arg.empty() ) args.push_back(arg);
+    return args;
+}
 
-vector<string> arguments;
 
-bool run = true;
-
+// TEST METHOD
+// void printArgs(string input, const vector<string> &args){
+//     cout<<"Arguments: ";
+//     for( vector<string>::iterator it=args.begin(); it!=args.end(); it++){
+//         cout<<*it<<" ";
+//     }
+//     cout<<endl;
+// }
 
 string readInput(){
     string input;
@@ -25,60 +45,11 @@ string readInput(){
     return input;
 }
 
-
-void output(string msg){
-    cout<<msg<<endl;
-}
-
-// Sort arguments and put them into vector (list)
-int setArguments(string input){
-    arguments.clear();
-    string arg = "";
-    for( string::iterator it = input.begin(); it != input.end(); it++){
-        if( *it == ' '){
-            if( !arg.empty() ) arguments.push_back(arg);
-            arg.clear();
-        }else{
-            arg += *it;
-        }
-    }
-    if( !arg.empty() ) arguments.push_back(arg);
-    return arguments.size();
-}
-
-
-void printArgs(string input){
-    cout<<"Arguments: ";
-    for( vector<string>::iterator it=arguments.begin(); it!=arguments.end(); it++){
-        cout<<*it<<" ";
-    }
-    cout<<endl;
-}
-
-
-
-void evaluateInput(){
-    string command = arguments.at(0);
-
-    if( command == "exit")
-        run = false;
-    else if( command == "run"){
-        arguments.erase(arguments.begin());
-        exec(arguments.at(0), arguments);       
-    }else
-        output("Unrecognized command: "+command);
-    // REMOVE THIS COMMENT
-}
-
-
-
 int main(){
-    while(run){ 
+    while(1){ 
         string input = readInput();
-        if( setArguments(input) ){
-            evaluateInput();
-        };        
+        const vector<string> args = getArguments(input);
+        if(args.size()) exec(args);
     }
-    output("Goodbye!");
     return 0;
 }
