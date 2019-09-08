@@ -2,7 +2,7 @@ EXE = minishell
 DIR = $(shell pwd)
 
 bin/minishell: obj/main.o obj/exec.o obj/piping.o obj/directory.o
-	g++ $(DIR)/obj/main.o $(DIR)/obj/exec. $(DIR)/obj/piping.o $(DIR)/obj/directory.o -o $(DIR)/bin/$(EXE)
+	g++ $(DIR)/obj/main.o $(DIR)/obj/exec.o $(DIR)/obj/piping.o $(DIR)/obj/directory.o -o $(DIR)/bin/$(EXE)
 
 obj/main.o: src/main.cpp
 	g++ -c -Iinclude $(DIR)/src/main.cpp -o $(DIR)/obj/main.o
