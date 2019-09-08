@@ -5,12 +5,14 @@
 #include <vector>
 #include <limits>
 
+
 #include "exec.h"
 #include "piping.h"
+#include "directory.h"
 
 using namespace std;
 
-#define PROMPT "MiniShell$ "
+#define PROMPT "MiniShell:"
 
 
 // Sort arguments and put them into vector (list)
@@ -35,11 +37,19 @@ const vector<string>& getArguments(string input){
 string readInput(){
     string input;
     do{
-        cout<<PROMPT;
+        
+        char * dir = getcwd(NULL,0);
+        if( dir == NULL ){
+            cout<<"Error while printing working dir: "<<strerror(errno)<<endl;
+            cout<<PROMPT<<"$ ";
+        } else {
+            cout<<PROMPT<<dir<<"$ ";
+        }
         getline(cin, input);
     }while(input.empty());
     return input;
 }
+
 
 
 int main(){
@@ -47,11 +57,13 @@ int main(){
         string input = readInput();
         const vector<string> args = getArguments(input);
         if(args.size() > 0){
-            if( isPipeCommand(args) )
-                forkCommandPipe(args);
-                
-            else
-                forkCommandSingle(args);
+            if( !runDirCommand(args) ){
+                if( isPipeCommand(args) )
+                    forkCommandPipe(args);
+                    
+                else
+                    forkCommandSingle(args);
+            }
         }
     }
     return 0;
