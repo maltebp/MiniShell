@@ -1,4 +1,5 @@
-# MiniShell
+# MiniShell 
+[![Build Status](https://travis-ci.org/maltebp/MiniShell.svg?branch=master)](https://travis-ci.org/maltebp/MiniShell)
 A small shell application for a UNIX operating system written in __C++__, using UNIX system calls to provide basic bash-like shell functionality.
 
 [Latest Release](http://github.com/maltebp/MiniShell/releases/latest)
