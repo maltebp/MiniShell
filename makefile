@@ -1,17 +1,19 @@
-minishell: main.o exec.o piping.o directory.o
-	g++ main.o exec.o piping.o directory.o -o minishell
+EXE = minishell
 
-main.o: main.cpp
-	g++ -c main.cpp
+bin/minishell: obj/main.o obj/exec.o obj/piping.o obj/directory.o
+	g++ obj/main.o obj/exec.o obj/piping.o obj/directory.o -o bin/$(EXE)
 
-exec.o: exec.cpp exec.h 
-	g++ -c exec.cpp
+obj/main.o: src/main.cpp
+	g++ -c -Iinclude src/main.cpp -o obj/main.o
 
-piping.o: piping.cpp piping.h
-	g++ -c piping.cpp
+obj/exec.o: src/exec.cpp include/exec.h 
+	g++ -c -Iinclude src/exec.cpp -o obj/exec.o
 
-directory.o: directory.cpp directory.h
-	g++ -c directory.cpp
+obj/piping.o: src/piping.cpp include/piping.h
+	g++ -c -Iinclude src/piping.cpp -o obj/piping.o
+
+obj/directory.o: src/directory.cpp include/directory.h
+	g++ -c -Iinclude src/directory.cpp -o obj/directory.o
 
 clean:
-	rm -f *.o minishell
+	rm -f obj/*.o bin/minishell
