@@ -13,9 +13,9 @@ This is a __school project__ for '62588 Operating Systems' at DTU, Denmark.
 ### Install and Run
  1. Download source code/project from the [latest release link](http://github.com/maltebp/MiniShell/releases/latest).
  2. Unpack source code
- 3. Build by either:
-    a. Run _compile.sh_ script in root folder
-    b. Running make file by typing in 'make' in terminal while in root folder
+ 3. (Optional) Build by either:
+    1. Run _compile.sh_ script in root folder
+    1. Running make file by typing in 'make' in terminal while in root folder
  4. Start application by running _bin/minishell_
 
 
