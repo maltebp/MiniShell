@@ -2,6 +2,6 @@ language: cpp
 
 os: linux
 
-compiler: gcc
+compiler: g++
 
 script: make
