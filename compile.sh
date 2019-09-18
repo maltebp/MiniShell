@@ -1,1 +1,1 @@
-g++ src/*.cpp -Iinclude -o bin/minishell
+g++ src/*.cpp -Iinclude -o minishell

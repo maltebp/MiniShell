@@ -17,7 +17,7 @@ using namespace std;
 
 
 void help(){
-    cout<<"\n93m MiniShell is a small application implementing basic functionality:\n"<<
+    cout<<"\nMiniShell is a small application implementing basic functionality:\n"<<
             "  cd [DIR]             \t Change working directory. '..' goes one directory back, and 'cd' goes to home directory.\n"<<
             "  dir/pwd              \t Prints current working directory.\n"
             "  [FILE] [ARG1] ..     \t Executes selected file if it's executable, including the given arguments.\n"<<
