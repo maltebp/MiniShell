@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 
-// Prints working directory using system call
+// Prints working directory using system call getcwd
 void printDirectory(){
     char * dir = getcwd(NULL,0); // Fetching pointer to str holding name
     if( dir == NULL ) cout<<"Error while printing working dir: "<<strerror(errno)<<endl;
@@ -15,7 +15,7 @@ void printDirectory(){
 }
 
 /* Changes the directory to the given path.
-     "cd .." works and using only 'cd' makes you go to home */
+     "cd .." works and using only 'cd' makes you go to $home */
 void changeDirectory(string path){
     if(chdir(path.c_str()) == -1){
         cout<<"Error: "<<strerror(errno)<<endl;;

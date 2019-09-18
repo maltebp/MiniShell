@@ -6,16 +6,16 @@
 #include <limits>
 #include <sstream>
 
-
 #include "exec.h"
 #include "piping.h"
 #include "directory.h"
 
-using namespace std;
-
 #define PROMPT "MiniShell:"
 
+using namespace std;
 
+
+// Prints the help message
 void help(){
     cout<<"\nMiniShell is a small application implementing basic functionality:\n"<<
             "  cd [DIR]             \t Change working directory. '..' goes one directory back, and 'cd' goes to home directory.\n"<<
@@ -26,6 +26,9 @@ void help(){
 }
 
 
+/*  Prints the prompt message (MiniShell:WORKING_DIR$).
+    It also uses the system call 'getcwd()' to get the
+    current working dir. */
 static void printPrompt(){
     char * dir = getcwd(NULL,0);
     if( dir == NULL ){
@@ -37,15 +40,20 @@ static void printPrompt(){
 }
 
 
+/** Prints prompt message and reads the input of the user
+ *  It returns the number of arguments (including command)
+ *  givne by the user */
 static int getInput(  vector<string> &args ){
-    string input;
-
+    
     printPrompt();
-
     args.clear();
 
+    string input;
+
+    // Read entire line
     getline(cin, input);
 
+    // Split line into arguments seperated by ' '
     stringstream ss(input);
 
     while( getline(ss, input, ' ')){
@@ -59,16 +67,22 @@ int main(){
     
     cout<< "\n\033[93mMiniShell started! Type 'help' to see available functionality\033[37m"<<endl;;
     
+    // Loop continues until the program is terminated externally (i.e. CTRL+C);
     while(1){
         vector<string> args;
         if( getInput(args) ){
+
             if( args[0] == "help") 
                 help();
+            
+            // Check if its a dir command
             else if( !runDirCommand(args) ){
                 
+                // Check if its a pipe command
                 if( isPipeCommand(args) )
                     forkCommandPipe(args);
                     
+                // Single command
                 else
                     forkCommandSingle(args);
             }

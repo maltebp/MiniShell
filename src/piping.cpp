@@ -11,7 +11,7 @@ int isPipeCommand( const vector<string> &args ){
 }
 
 
-// Returns the argument index of the pipe symbol 
+// Returns the  index of the pipe symbol in the argument list
 int getPipeIndex(const vector<string> &args){
     for(int i=0; i<args.size(); i++){
         if( args[i] == "|" ) return i;
@@ -20,8 +20,9 @@ int getPipeIndex(const vector<string> &args){
 }
 
 
-/* Split a pipe command ('cmd1 arg1 | cmd2 arg1') into to seperate 
-    lists (vectors) of string commands and arguments */
+/* Split a pipe command ('cmd1 arg1 | cmd2 arg1') into two seperate 
+    lists (vectors) commands.
+    Returns a pointer to the array of string vectors (size = 2) */
 const vector<string>* splitPipeCommand(const vector<string> &args){
 
     if(!isPipeCommand) return NULL;

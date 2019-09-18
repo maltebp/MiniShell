@@ -16,9 +16,11 @@ void forkCommandSingle(const vector<string> &args){
     int pid = fork();
     if(pid == -1) cout<<"Forking error"<<endl;
     if(pid == 0){
+        // Child
         executeCommand(args);
     }
     if(pid > 0){
+        // Parent
         int status;
         waitpid(pid, &status, 0);
     }  
@@ -39,6 +41,8 @@ void forkCommandPipe(const vector<string> &args){
     if( pid1 == 0 ){
         // Sets pipeinput to stdin (read)
         dup2(pipefd[0], 0);
+
+        // Close original pipe fds, other it will block
         close(pipefd[1]);
         close(pipefd[0]);
         executeCommand(commands[1]);
@@ -50,8 +54,10 @@ void forkCommandPipe(const vector<string> &args){
 
         if( pid2 == -1 ) cout<<"Forking error!"<<endl;
         if( pid2 == 0 ){
-            // Sets pipeoutput to stdout (wrte)
+            // Sets pipeoutput to stdout (write)
             dup2(pipefd[1], 1);
+
+            // Close original pipe fds, other it will block
             close(pipefd[0]);
             close(pipefd[1]);
             executeCommand(commands[0]);
@@ -73,12 +79,16 @@ void forkCommandPipe(const vector<string> &args){
 /* Wrapper function for execv function, with C++ friendly arguments
     (string vector + path) */
 int execvString( const string path, const vector<string> &args ){
+
+    // Size + 1 for NULL pointer
     char* c_arr[args.size()+1];
 
+    //Copy vector strings into newly allocated strings
     for( unsigned int i=0; i<args.size(); i++){
-        char* str = new char[args[i].size()+1];
-        strcpy(str, args[i].c_str());
-        c_arr[i] = str;
+        // Allocate memory for the string copy
+        c_arr[i] = new char[args[i].size()+1];
+        // Copy the string
+        strcpy(c_arr[i], args[i].c_str());
     }
 
     // Adding the null pointer to end of argument list to conform to execv
