@@ -4,6 +4,7 @@
 #include <string.h>
 #include <vector>
 #include <limits>
+#include <sstream>
 
 
 #include "exec.h"
@@ -16,7 +17,7 @@ using namespace std;
 
 
 void help(){
-    cout<<"\nMiniShell is a small application implementing basic functionality:\n"<<
+    cout<<"\n93m MiniShell is a small application implementing basic functionality:\n"<<
             "  cd [DIR]             \t Change working directory. '..' goes one directory back, and 'cd' goes to home directory.\n"<<
             "  dir/pwd              \t Prints current working directory.\n"
             "  [FILE] [ARG1] ..     \t Executes selected file if it's executable, including the given arguments.\n"<<
@@ -25,51 +26,75 @@ void help(){
 }
 
 
-// Sort arguments and put them into vector (list)
-const vector<string>& getArguments(string input){
-    vector<string> *args;
-    args = new vector<string>;
-    string arg = "";
-    for( string::iterator it = input.begin(); it != input.end(); it++){
-        if( *it == ' '){
-            if( !arg.empty() ) (*args).push_back(arg);
-            arg.clear();
-        }else{
-            arg += *it;
-        }
+// // Sort arguments and put them into vector (list)
+// const vector<string>& getArguments(string input, vector<string> &args){
+//     // vector<string> *args;
+//     // args = new vector<string>;
+//     // string arg = "";
+//     // for( string::iterator it = input.begin(); it != input.end(); it++){
+//     //     if( *it == ' '){
+//     //         if( !arg.empty() ) (*args).push_back(arg);
+//     //         arg.clear();
+//     //     }else{
+//     //         arg += *it;
+//     //     }
+//     // }
+//     // if( !arg.empty() ) (*args).push_back(arg);
+//     // return (*args);
+
+// //     string arg;
+
+
+// // }
+
+
+
+static void printPrompt(){
+    char * dir = getcwd(NULL,0);
+    if( dir == NULL ){
+        cout<<"Error while printing working dir: "<<strerror(errno)<<endl;
+        cout<<"\033[93m"<<PROMPT<<"$ ";
+    } else {
+        cout<<"\033[93m"<<PROMPT<<"\033[96m"<<dir<<"\033[37m$ ";
     }
-    if( !arg.empty() ) (*args).push_back(arg);
-    return (*args);
 }
 
 
-// Reads user input from terminal (executable commands ls, cat, nano etc);
-string readInput(){
+// // Reads user input from terminal (executable commands ls, cat, nano etc);
+// string readInput(string arg){
+//     string input;
+//     do{
+//         getline(cin, input);
+//     }while(input.empty());
+//     return input;
+// }
+
+
+static int getInput(  vector<string> &args ){
     string input;
-    do{
-        
-        char * dir = getcwd(NULL,0);
-        if( dir == NULL ){
-            cout<<"Error while printing working dir: "<<strerror(errno)<<endl;
-            cout<<PROMPT<<"$ ";
-        } else {
-            cout<<PROMPT<<dir<<"$ ";
-        }
-        getline(cin, input);
-    }while(input.empty());
-    return input;
-}
 
+    printPrompt();
+
+    args.clear();
+
+    getline(cin, input);
+
+    stringstream ss(input);
+
+    while( getline(ss, input, ' ')){
+        args.push_back(input);
+    }
+    return args.size();
+}
 
 
 int main(){
     
-    cout<< "\nMiniShell started! Type 'help' to see available functionality"<<endl;;
-
+    cout<< "\n\033[93mMiniShell started! Type 'help' to see available functionality\033[37m"<<endl;;
+    
     while(1){
-        string input = readInput();
-        const vector<string> args = getArguments(input);
-        if(args.size() > 0){
+        vector<string> args;
+        if( getInput(args) ){
             if( args[0] == "help") 
                 help();
             else if( !runDirCommand(args) ){
