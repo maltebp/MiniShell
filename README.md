@@ -26,7 +26,6 @@ The shell uses the same syntax as the bash shell. When prompting command, it dis
 
 ### System Calls
 The shell gains functionality by implementing system calls. These are "functions"/services provided by the kernel (core of the OS). The system calls used are:
-
  - _execv:_ Executes a binary with the given path (+file name), with the arguments given to the function.
  - _fork:_ Copy current process (parent) into a new process (child). Required since 'execvp' takes over the process its called from.
  - _waitpid:_ Waits for child process, given by the pid (process id) to finish before continuing.
@@ -34,4 +33,3 @@ The shell gains functionality by implementing system calls. These are "functions
  - _getcwd_: Retrieves the current working directory.
  - _pipe:_ Creates a pipe. A pipe is two file descriptors (fd) into a virtual file. One fd may write and the other read. These may be given to two different processes (as in this case), allowing output of one process to be the input of the other.
  - _dup2:_ Copies a file descriptor over to another file descriptor, i.e. copy one pipe end over to the standard input filedescriptor (stdin).
-

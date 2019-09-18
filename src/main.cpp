@@ -26,29 +26,6 @@ void help(){
 }
 
 
-// // Sort arguments and put them into vector (list)
-// const vector<string>& getArguments(string input, vector<string> &args){
-//     // vector<string> *args;
-//     // args = new vector<string>;
-//     // string arg = "";
-//     // for( string::iterator it = input.begin(); it != input.end(); it++){
-//     //     if( *it == ' '){
-//     //         if( !arg.empty() ) (*args).push_back(arg);
-//     //         arg.clear();
-//     //     }else{
-//     //         arg += *it;
-//     //     }
-//     // }
-//     // if( !arg.empty() ) (*args).push_back(arg);
-//     // return (*args);
-
-// //     string arg;
-
-
-// // }
-
-
-
 static void printPrompt(){
     char * dir = getcwd(NULL,0);
     if( dir == NULL ){
@@ -58,16 +35,6 @@ static void printPrompt(){
         cout<<"\033[93m"<<PROMPT<<"\033[96m"<<dir<<"\033[37m$ ";
     }
 }
-
-
-// // Reads user input from terminal (executable commands ls, cat, nano etc);
-// string readInput(string arg){
-//     string input;
-//     do{
-//         getline(cin, input);
-//     }while(input.empty());
-//     return input;
-// }
 
 
 static int getInput(  vector<string> &args ){
