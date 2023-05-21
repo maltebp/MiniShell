@@ -10,6 +10,13 @@
 #include "piping.h"
 #include "directory.h"
 
+#include "history.h"
+#include "tree.h"
+#include "diff.h"
+#include "find.h"
+#include "wc.h"
+#include "password.h"
+
 #define PROMPT "MiniShell:"
 
 using namespace std;
@@ -22,6 +29,7 @@ void help(){
             "  dir/pwd              \t Prints current working directory.\n"
             "  [FILE] [ARG1] ..     \t Executes selected file if it's executable, including the given arguments.\n"<<
             "  [FILE1] | [FILE2]    \t Pipes the output of file 1 into the output of filee 2.\n"<<
+            "  tree [DIR]           \t Prints the directory tree of the given directory.\n"<<
             endl;
 }
 
@@ -65,16 +73,113 @@ static int getInput(  vector<string> &args ){
 
 int main(){
     
-    cout<< "\n\033[93mMiniShell started! Type 'help' to see available functionality\033[37m"<<endl;;
+    cout<< "\n\033[93mMiniShell started!\n\033[37m"<<endl;
+    // type in green color
+    cout<<"\033[92mType 'help' to see available functionality\nType 'history' to see history of your commands\n\n\033[37m";
     
     // Loop continues until the program is terminated externally (i.e. CTRL+C);
+
     while(1){
         vector<string> args;
         if( getInput(args) ){
+            // Add the command to history
+            add_command_to_history(args[0]);
+
+            // Check if the command is "history"
+            if (args[0] == "history") {
+                print_command_history();
+            }
+
+            else{
 
             if( args[0] == "help") 
                 help();
-            
+
+            // Check if its a tree command
+            else if (args[0] == "tree") {
+                string path = ".";
+                if (args.size() > 1) {
+                    path = args[1];
+                }
+                cout << path << endl;
+                print_directory_tree(path, 0);
+            }
+
+            // Check if its a diff command
+            else if (args[0] == "diff") {
+                if (args.size() < 3) {
+                    cout << "Usage: diff [FILE1] [FILE2]" << endl;
+                } else {
+                    compare_files(args[1], args[2]);
+                }
+            }
+
+            // Check if its a find command
+            else if (args[0] == "find"){
+                string path = ".";
+                string name = "";
+                string type = "";
+                long size = -1;
+                if (args.size() > 1) {
+                    path = args[1];
+                }
+                if (args.size() > 2) {
+                    name = args[2];
+                }
+                if (args.size() > 3) {
+                    type = args[3];
+                }
+                if (args.size() > 4) {
+                    size = stol(args[4]);
+                }
+                find_files(path, name, type, size);
+            }
+
+            // Check if its wc command
+            else if (args[0] == "wc") {
+                if (args.size() < 2) {
+                    cout << "Usage: wc [FILE]" << endl;
+                } else {
+                    string filename = args[1];
+                    ifstream input_file(filename);
+                    if (!input_file) {
+                        cerr << "Error opening file: " << filename << endl;
+                    }
+                    string input((istreambuf_iterator<char>(input_file)), (istreambuf_iterator<char>()));
+                    input_file.close();
+                    cout << "Characters: " << count_chars(input) << endl;
+                    cout << "Words: " << count_words(input) << endl;
+                    cout << "Lines: " << count_lines(input) << endl;
+                }
+            }
+
+            // Check if its a password command
+            else if (args[0] == "password") {
+                if (args.size() < 2) {
+                    cout << "Usage: password [LENGTH] [optional -u -l -d -s]" << endl;
+                } else {
+                    int length = stoi(args[1]);
+                    bool upper = false;
+                    bool lower = true;
+                    bool digit = false;
+                    bool special = false;
+                    if (args.size() > 2) {
+                        for (int i = 2; i < args.size(); i++) {
+                            if (args[i] == "-u") {
+                                upper = true;
+                            } else if (args[i] == "-l") {
+                                lower = true;
+                            } else if (args[i] == "-d") {
+                                digit = true;
+                            } else if (args[i] == "-s") {
+                                special = true;
+                            }
+                        }
+                    }
+                    cout << generatePassword(length, upper, lower, digit, special) << endl;
+                }
+            }
+
             // Check if its a dir command
             else if( !runDirCommand(args) ){
                 
@@ -86,6 +191,9 @@ int main(){
                 else
                     forkCommandSingle(args);
             }
+
+            }
+
         }
     }
     return 0;
