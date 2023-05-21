@@ -16,6 +16,7 @@
 #include "find.h"
 #include "wc.h"
 #include "password.h"
+#include "grep.h"
 
 #define PROMPT "MiniShell:"
 
@@ -30,6 +31,12 @@ void help(){
             "  [FILE] [ARG1] ..     \t Executes selected file if it's executable, including the given arguments.\n"<<
             "  [FILE1] | [FILE2]    \t Pipes the output of file 1 into the output of filee 2.\n"<<
             "  tree [DIR]           \t Prints the directory tree of the given directory.\n"<<
+            "  diff [FILE1] [FILE2] \t Compares the two given files.\n"<<
+            "  find [DIR] [NAME] [TYPE] [SIZE] \t Finds files in the given directory with the given name, type and size.\n"<<
+            "  wc [FILE]            \t Prints the number of characters, words and lines in the given file.\n"<<
+            "  grep [PATTERN] [FILE] \t Prints the lines in the given file that contain the given pattern.\n"<<
+            "  history              \t Prints the history of commands.\n"<<
+            "  password [LENGTH] [OPTIONS {-u: uppercase, -l: lowercase, -d: digits, -s: special characters}] \t Generates a random password.\n"<<
             endl;
 }
 
@@ -177,6 +184,18 @@ int main(){
                         }
                     }
                     cout << generatePassword(length, upper, lower, digit, special) << endl;
+                }
+            }
+
+            // Check if its a grep command
+            else if (args[0] == "grep") {
+                if (args.size() < 3) {
+                    cout << "Usage: grep [PATTERN] [FILE]" << endl;
+                } else {
+                    string pattern = args[1];
+                    string filename = args[2];
+                    
+                    grep(pattern, filename);
                 }
             }
 
