@@ -1,3 +1,15 @@
+// Implement the below functionality
+// 1.	history: display a list of previously executed commands
+// 2.	tree: display the directory structure of a file system as a tree diagram
+// 3.	htop: an enhanced version of top with a more user-friendly interface and additional features
+// 4.	awk: a powerful text processing tool for manipulating data in tabular format
+// 5.	diff: compare the contents of two files or directories
+// 6.	du: display disk usage information for files and directories
+// 7.	df: display disk space information for file systems
+// 8.	find: search for files and directories that match certain criteria (name, type, size, etc.)
+// 9.	wc: count the number of lines, words, and characters in a text file or output stream
+// 10.	head: display the first few lines of a text file or output stream
+// 11.	tail: display the last few lines of a text file or output stream
 
 #include "directory.h"
 #include <iostream>

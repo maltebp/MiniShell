@@ -33,3 +33,32 @@ The shell gains functionality by implementing system calls. These are "functions
  - _getcwd_: Retrieves the current working directory.
  - _pipe:_ Creates a pipe. A pipe consists of two file descriptors (fd) for a virtual file. One fd may write and the other read. These may be given to two different processes (as in this case), allowing output of one process to be the input of the other.
  - _dup2:_ Copies a file descriptor over to another file descriptor, i.e. copy one pipe end over to the standard input file descriptor (stdin).
+
+ # Contributions
+## [Muhammad Danish Azeem](https://github.com/mda1458)
+- history [n]: Displays last n commands
+```
+   history [n]
+```
+- tree: Displays the directory structure of the directory
+```
+   tree [DIR_PATH]
+```
+- diff: Compares two files and displays the difference
+```
+   diff [FILE_1] [FILE_2]
+```
+- find: Finds a file in the directory
+```
+   find [DIR_PATH] [FILE_NAME] [EXTENSION]
+```
+- wc: Displays the number of lines, words and characters in a file
+```
+   wc [FILE_NAME]
+```
+- password: Generates a random password of given length
+```
+   password [LENGTH] [OPTIONAL: -s (special characters)] [OPTIONAL: -n (numbers)] [OPTIONAL: -c (capital letters)] [OPTIONAL: -l (lowercase letters)]
+```
+
+
